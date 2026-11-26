@@ -224,6 +224,16 @@ async function iniciarPanel() {
     await verificarAcceso();
 }
 
+// Las fotos originales están en la raíz del catálogo (/alexval/),
+// no dentro de /alexval/admin/. Las fotos nuevas de Supabase ya tienen URL completa.
+function urlImagenAdmin(imagen) {
+    const ruta = String(imagen || "").trim();
+    if (!ruta) return "";
+    if (/^https:\/\//i.test(ruta)) return ruta;
+    if (ruta.startsWith("/")) return ruta;
+    return "../" + ruta.split("/").map(encodeURIComponent).join("/");
+}
+
 async function cargarProductos() {
     const lista = document.getElementById("listaProductos");
     const mensaje = document.getElementById("mensajeProductos");
@@ -348,7 +358,7 @@ marco.className = "producto-imagen-caja";
 if (producto.imagen) {
     const foto = document.createElement("img");
     foto.className = "producto-imagen";
-    foto.src = producto.imagen;
+    foto.src = urlImagenAdmin(producto.imagen);
     foto.alt = producto.nombre;
     foto.loading = "lazy";
     foto.addEventListener("error", function() {
