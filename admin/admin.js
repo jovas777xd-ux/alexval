@@ -1,7 +1,17 @@
 
+// Sesión solo en memoria: al actualizar o cerrar la pestaña,
+// la administradora debe volver a iniciar sesión.
+// No afecta la cuenta ni las políticas RLS de Supabase.
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_KEY,
+    {
+        auth: {
+            persistSession: false,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+        }
+    }
 );
 
 const login = document.getElementById("login");
